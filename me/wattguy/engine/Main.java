@@ -62,8 +62,6 @@ public class Main extends Application {
 
         root.setOnMousePressed((MouseEvent event) -> {
             drag = Camera.main.cameraToWorld(new Vector2((float) event.getX(), (float) event.getY()));
-
-            primaryStage.getScene().setCursor(Cursor.DEFAULT);
         });
 
         root.setOnMouseDragged((MouseEvent event) -> {
@@ -79,7 +77,7 @@ public class Main extends Application {
 
             drag = world;
 
-            primaryStage.getScene().setCursor(Cursor.DEFAULT);
+            primaryStage.getScene().setCursor(Cursor.CLOSED_HAND);
         });
 
         root.setOnMouseReleased((MouseEvent event) -> {
