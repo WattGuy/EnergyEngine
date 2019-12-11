@@ -6,7 +6,7 @@ import me.wattguy.engine.utils.Vector2;
 public class Camera extends GameObject {
 
     public static Camera main = null;
-    private float scale = 10f;
+    private float scale = 5f;
 
     public Camera(){
         main = this;
@@ -36,9 +36,21 @@ public class Camera extends GameObject {
     public Vector2 cameraToWorld(Vector2 camera){
 
         return new Vector2(
-                (camera.getX() - (Main.WIDTH / 2)) / (Main.WIDTH / scale),
-                -(camera.getY() - (Main.HEIGHT / 2)) / (Main.HEIGHT / scale)
+                getPosition().getX() - ((Main.WIDTH / 2) / (Main.WIDTH / scale)) + (camera.getX() / (Main.WIDTH / scale)),
+                getPosition().getY() - (camera.getY() / (Main.HEIGHT / scale)) + ((Main.HEIGHT / 2) / (Main.HEIGHT / scale))
         );
+
+    }
+
+    public float cameraUnitToWorld(float camera, boolean x){
+
+        return x ? (camera / (Camera.main.getScale() / 10)) / (Main.WIDTH / scale) : (camera / (Camera.main.getScale() / 10)) / (Main.HEIGHT / scale);
+
+    }
+
+    public float worldUnitToCamera(float world, boolean x){
+
+        return x ? world * (Main.WIDTH / scale) : world * (Main.HEIGHT / scale);
 
     }
 

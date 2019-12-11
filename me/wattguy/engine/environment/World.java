@@ -1,6 +1,5 @@
 package me.wattguy.engine.environment;
 
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;

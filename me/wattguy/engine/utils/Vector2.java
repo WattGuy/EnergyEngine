@@ -27,6 +27,14 @@ public class Vector2 {
         return y;
     }
 
+    public Vector2 add(Vector2 other){
+        return new Vector2(x + other.x, y + other.y);
+    }
+
+    public Vector2 subtract(Vector2 other){
+        return new Vector2(x - other.x, y - other.y);
+    }
+
     @Override
     public String toString(){
         return x + ":" + y;

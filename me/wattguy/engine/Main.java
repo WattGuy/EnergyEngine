@@ -1,37 +1,60 @@
 package me.wattguy.engine;
 
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import me.wattguy.engine.environment.World;
+import me.wattguy.engine.interfaces.Collider;
 import me.wattguy.engine.objects.Camera;
+import me.wattguy.engine.objects.GameObject;
 import me.wattguy.engine.objects.Rectangle;
 import me.wattguy.engine.threading.UpdateThread;
 import me.wattguy.engine.utils.Vector2;
+
+import java.io.IOException;
 
 public class Main extends Application {
 
     public static World w;
 
     public static Vector2 drag = null;
+    public static Collider target = null;
+    public static Vector2 plus = null;
+
+    public static Scene mainScene;
+    public static AnchorPane pane;
 
     public static float WIDTH = 500f;
     public static float HEIGHT = 500f;
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage stage) throws IOException {
+
+        mainScene = new Scene(FXMLLoader.load(getClass().getResource("/forms/main.fxml")));
+
+        stage.setResizable(false);
+        stage.setFullScreen(false);
+        stage.setScene(mainScene);
+
+        pane = (AnchorPane) mainScene.lookup("#pane");
+
+        WIDTH = (float) pane.getWidth();
+        HEIGHT = (float) pane.getHeight();
+
         w = new World();
 
         for(int x = -10; x <= 10; x++){
-            if (x % 2 != 0) continue;
 
             for(int y = -10; y <= 10; y++){
 
-                w.addObject(new Rectangle(1, 1).setPosition(new Vector2(x, y)));
+                w.addObject(new Rectangle(0.5f, 0.5f).setPosition(new Vector2(x, y)));
 
             }
 
@@ -39,13 +62,10 @@ public class Main extends Application {
 
         new Camera();
 
-        Pane root = new Pane();
-        Scene s = new Scene(root, 500, 500);
+        stage.widthProperty().addListener(e -> WIDTH = (float) pane.getWidth());
+        stage.heightProperty().addListener(e -> HEIGHT = (float) pane.getHeight());
 
-        primaryStage.widthProperty().addListener(e -> WIDTH = (float) primaryStage.getWidth());
-        primaryStage.heightProperty().addListener(e -> HEIGHT = (float) primaryStage.getHeight());
-
-        root.setOnScroll((ScrollEvent event) -> {
+        pane.setOnScroll((ScrollEvent event) -> {
             double deltaY = event.getDeltaY();
 
             float kf;
@@ -60,37 +80,61 @@ public class Main extends Application {
 
         // PRESSED -> RELEASED
 
-        root.setOnMousePressed((MouseEvent event) -> {
-            drag = Camera.main.cameraToWorld(new Vector2((float) event.getX(), (float) event.getY()));
+        pane.setOnMousePressed((MouseEvent event) -> {
+            if (event.getButton() == MouseButton.SECONDARY)
+                drag = Camera.main.cameraToWorld(new Vector2((float) event.getX(), (float) event.getY()));
+            else if (event.getButton() == MouseButton.PRIMARY) {
+                Vector2 world = Camera.main.cameraToWorld(new Vector2((float) event.getX(), (float) event.getY()));
+
+                for(GameObject go : w.objects.values()){
+                    if (!(go instanceof Collider)) continue;
+
+                    Collider target = (Collider) go;
+                    if (target.contains(world)) {
+
+                        Main.target = target;
+                        Main.plus = go.getPosition().subtract(world);
+                        break;
+
+                    }
+
+                }
+
+            }
         });
 
-        root.setOnMouseDragged((MouseEvent event) -> {
+        pane.setOnMouseDragged((MouseEvent event) -> {
 
-            Vector2 world = Camera.main.cameraToWorld(new Vector2((float) event.getX(), (float) event.getY()));
+            if (drag != null) {
+                Vector2 world = Camera.main.cameraToWorld(new Vector2((float) event.getX(), (float) event.getY()));
 
-            Camera.main.setPosition(
-                    new Vector2(
-                            Camera.main.getPosition().getX() + (drag.getX() - world.getX()),
-                            Camera.main.getPosition().getY() + (drag.getY() - world.getY())
-                    )
-            );
+                Camera.main.setPosition(
+                        new Vector2(
+                                Camera.main.getPosition().getX() + (drag.getX() - world.getX()),
+                                Camera.main.getPosition().getY() + (drag.getY() - world.getY())
+                        )
+                );
 
-            drag = world;
+                stage.getScene().setCursor(Cursor.CLOSED_HAND);
+            }else if (target != null && plus != null){
+                ((GameObject) target).setPosition(Camera.main.cameraToWorld(new Vector2((float) event.getX(), (float) event.getY())).add(plus));
 
-            primaryStage.getScene().setCursor(Cursor.CLOSED_HAND);
+                stage.getScene().setCursor(Cursor.CLOSED_HAND);
+            }
+
         });
 
-        root.setOnMouseReleased((MouseEvent event) -> {
-            if (drag == null) return;
+        pane.setOnMouseReleased((MouseEvent event) -> {
+            stage.getScene().setCursor(Cursor.DEFAULT);
 
-            primaryStage.getScene().setCursor(Cursor.DEFAULT);
+            if (drag != null) drag = null;
+            if (target != null) target = null;
         });
 
-        w.sceneInitialize(root, s, primaryStage);
+        w.sceneInitialize(pane, mainScene, stage);
 
-        primaryStage.setTitle("Energy Engine");
-        primaryStage.setScene(s);
-        primaryStage.show();
+        stage.setTitle("Energy Engine");
+        stage.show();
 
         new UpdateThread(60).start();
     }
