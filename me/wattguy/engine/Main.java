@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 import me.wattguy.engine.environment.World;
 import me.wattguy.engine.interfaces.Collider;
 import me.wattguy.engine.objects.Camera;
+import me.wattguy.engine.objects.Circle;
 import me.wattguy.engine.objects.GameObject;
 import me.wattguy.engine.objects.Rectangle;
 import me.wattguy.engine.threading.UpdateThread;
@@ -48,13 +49,16 @@ public class Main extends Application {
         WIDTH = (float) pane.getWidth();
         HEIGHT = (float) pane.getHeight();
 
-        w = new World();
+        w = new World(60);
 
         for(int x = -10; x <= 10; x++){
 
             for(int y = -10; y <= 10; y++){
 
-                w.addObject(new Rectangle(0.5f, 0.5f).setPosition(new Vector2(x, y)));
+                if (x == 0 && y == 0)
+                    w.addObject(new Rectangle(x == 0 && y == 0 ? 0.1f : 0.5f, x == 0 && y == 0 ? 0.1f : 0.5f).setPosition(new Vector2(x, y)));
+                else
+                    w.addObject(new Circle(0.1f).setPosition(new Vector2(x, y)));
 
             }
 
@@ -136,7 +140,7 @@ public class Main extends Application {
         stage.setTitle("Energy Engine");
         stage.show();
 
-        new UpdateThread(60).start();
+        w.start();
     }
 
     public static void main(String[] args) {

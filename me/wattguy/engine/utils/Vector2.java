@@ -35,6 +35,12 @@ public class Vector2 {
         return new Vector2(x - other.x, y - other.y);
     }
 
+    public float distance(Vector2 other){
+
+        return (float) Math.sqrt(Math.pow(x - other.getX(), 2) + Math.pow(y - other.getY(), 2));
+
+    }
+
     @Override
     public String toString(){
         return x + ":" + y;

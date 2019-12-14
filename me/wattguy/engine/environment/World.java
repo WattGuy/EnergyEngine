@@ -1,17 +1,40 @@
 package me.wattguy.engine.environment;
 
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import me.wattguy.engine.Main;
+import me.wattguy.engine.interfaces.Collider;
 import me.wattguy.engine.interfaces.Drawable;
 import me.wattguy.engine.objects.GameObject;
 
 import java.util.HashMap;
 import java.util.UUID;
 
-public class World implements Drawable {
+public class World extends Thread implements Drawable {
 
     public HashMap<UUID, GameObject> objects = new HashMap<>();
+
+    private long update;
+
+    public World(int ticks){
+        this.update = 1000L / ticks;
+    }
+
+    @Override
+    public void run(){
+
+        while(true) {
+            Platform.runLater(() -> Main.w.draw());
+
+            try {
+                sleep(update);
+            } catch (InterruptedException ignored) {}
+        }
+
+    }
 
     public World addObject(GameObject go){
         objects.put(go.getUUID(), go);
@@ -55,8 +78,27 @@ public class World implements Drawable {
 
             ((Drawable) go).draw();
 
+            if (go instanceof Collider){
+                Collider col = (Collider) go;
+                boolean was = false;
+
+                for(GameObject o : Main.w.objects.values()){
+                    if (o == go || !(o instanceof Collider)) continue;
+
+                    if (col.isColliding((Collider) o)) {
+                        ((Drawable) go).setColor(Color.AQUA);
+                        was = true;
+                    }
+                }
+
+                if (!was) ((Drawable) go).setColor(Color.GREENYELLOW);
+
+            }
         }
 
     }
+
+    @Override
+    public void setColor(Color c) { }
 
 }

@@ -4,15 +4,17 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import me.wattguy.engine.Main;
 import me.wattguy.engine.interfaces.Collider;
 import me.wattguy.engine.interfaces.Drawable;
+import me.wattguy.engine.utils.Collision;
 import me.wattguy.engine.utils.Vector2;
 
 public class Circle extends GameObject implements Collider, Drawable {
 
     private float radius;
 
-    private javafx.scene.shape.Circle shape;
+    private javafx.scene.shape.Ellipse shape;
 
     public Circle(float radius){
 
@@ -22,9 +24,11 @@ public class Circle extends GameObject implements Collider, Drawable {
 
     @Override
     public void sceneInitialize(Pane root, Scene s, Stage primaryStage) {
-        shape = new javafx.scene.shape.Circle(radius, Color.GREENYELLOW);
+        shape = new javafx.scene.shape.Ellipse((double) Camera.main.worldUnitToCamera(radius, true), (double) Camera.main.worldUnitToCamera(radius, false));
+        shape.setFill(Color.GREENYELLOW);
 
         root.getChildren().add(shape);
+        shape.toBack();
     }
 
     @Override
@@ -33,20 +37,28 @@ public class Circle extends GameObject implements Collider, Drawable {
 
         Vector2 camera = Camera.main.worldToCamera(getPosition());
 
-        shape.setRadius(radius / (Camera.main.getScale() / 10));
+        shape.setRadiusX(Camera.main.worldUnitToCamera(radius, true));
+        shape.setRadiusY(Camera.main.worldUnitToCamera(radius, false));
 
         shape.setCenterX(camera.getX());
         shape.setCenterY(camera.getY());
     }
 
     @Override
-    public boolean isColliding(Collider col) {
-        return false;
+    public void setColor(Color c) {
+        shape.setFill(c);
     }
 
     @Override
+    public boolean isColliding(Collider col) { return Collision.isColliding(this, col); }
+
+    @Override
     public boolean contains(Vector2 v) {
-        return false;
+        return getPosition().distance(v) <= radius;
+    }
+
+    public float getRadius() {
+        return radius;
     }
 
 }
