@@ -12,8 +12,7 @@ public class Collision {
             Rectangle r1 = (Rectangle) col1;
             Rectangle r2 = (Rectangle) col2;
 
-            if (
-                    r1.topRight().getY() < r2.bottomLeft().getY()
+            if (r1.topRight().getY() < r2.bottomLeft().getY()
                             ||
                             r1.bottomLeft().getY() > r2.topRight().getY()
                             ||

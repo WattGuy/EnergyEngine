@@ -98,6 +98,12 @@ public class World extends Thread implements Drawable {
 
     }
 
+    public void gravity(){
+
+
+
+    }
+
     @Override
     public void setColor(Color c) { }
 

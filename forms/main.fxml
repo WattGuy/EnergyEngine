@@ -5,34 +5,39 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane id="pane" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane id="pane" prefHeight="438.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
+        <VBox prefHeight="525.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
             <children>
-                <MenuBar VBox.vgrow="NEVER">
-                    <menus>
-                        <Menu mnemonicParsing="false" text="Файл">
-                            <items>
-                                <MenuItem mnemonicParsing="false" text="Создать новую" />
-                                <MenuItem mnemonicParsing="false" text="Открыть..." />
-                                <Menu mnemonicParsing="false" text="Открыть недавние" />
-                                <SeparatorMenuItem mnemonicParsing="false" />
-                                <MenuItem mnemonicParsing="false" text="Сохранить" />
-                                <MenuItem mnemonicParsing="false" text="Сохранить как..." />
-                            </items>
-                        </Menu>
-                        <Menu mnemonicParsing="false" text="Настройки" />
-                        <Menu mnemonicParsing="false" text="Помощь">
-                            <items>
-                                <MenuItem mnemonicParsing="false" text="О программе" />
-                            </items>
-                        </Menu>
-                    </menus>
-                </MenuBar>
-                <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+            <HBox prefHeight="25.0" prefWidth="500.0">
+               <children>
+                      <MenuBar id="menu" nodeOrientation="LEFT_TO_RIGHT" prefWidth="500.0" HBox.hgrow="ALWAYS">
+                          <menus>
+                              <Menu mnemonicParsing="false" text="Файл">
+                                  <items>
+                                      <MenuItem mnemonicParsing="false" text="Создать новую" />
+                                      <MenuItem mnemonicParsing="false" text="Открыть..." />
+                                      <Menu mnemonicParsing="false" text="Открыть недавние" />
+                                      <SeparatorMenuItem mnemonicParsing="false" />
+                                      <MenuItem mnemonicParsing="false" text="Сохранить" />
+                                      <MenuItem mnemonicParsing="false" text="Сохранить как..." />
+                                  </items>
+                              </Menu>
+                              <Menu mnemonicParsing="false" text="Настройки" />
+                              <Menu mnemonicParsing="false" text="Помощь">
+                                  <items>
+                                      <MenuItem mnemonicParsing="false" text="О программе" />
+                                  </items>
+                              </Menu>
+                          </menus>
+                      </MenuBar>
+               </children>
+            </HBox>
+                <AnchorPane id="workingpane" prefHeight="500.0" prefWidth="500.0">
                     <children>
                         <Text layoutX="14.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="60 FPS" />
                     </children>

@@ -4,13 +4,10 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import me.wattguy.engine.Main;
-import me.wattguy.engine.interfaces.Collider;
 import me.wattguy.engine.interfaces.Drawable;
-import me.wattguy.engine.utils.Collision;
 import me.wattguy.engine.utils.Vector2;
 
-public class Circle extends GameObject implements Collider, Drawable {
+public class Circle extends Rigidbody implements Drawable {
 
     private float radius;
 
@@ -48,9 +45,6 @@ public class Circle extends GameObject implements Collider, Drawable {
     public void setColor(Color c) {
         shape.setFill(c);
     }
-
-    @Override
-    public boolean isColliding(Collider col) { return Collision.isColliding(this, col); }
 
     @Override
     public boolean contains(Vector2 v) {

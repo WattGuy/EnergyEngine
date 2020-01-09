@@ -4,6 +4,8 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
+import javafx.scene.control.ListView;
+import javafx.scene.control.MenuBar;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
@@ -31,6 +33,8 @@ public class Main extends Application {
 
     public static Scene mainScene;
     public static AnchorPane pane;
+    public static AnchorPane workingpane;
+    public static MenuBar menu;
 
     public static float WIDTH = 500f;
     public static float HEIGHT = 500f;
@@ -45,6 +49,8 @@ public class Main extends Application {
         stage.setScene(mainScene);
 
         pane = (AnchorPane) mainScene.lookup("#pane");
+        workingpane = (AnchorPane) mainScene.lookup("#workingpane");
+        menu = (MenuBar) mainScene.lookup("#menu");
 
         WIDTH = (float) pane.getWidth();
         HEIGHT = (float) pane.getHeight();
@@ -66,8 +72,8 @@ public class Main extends Application {
 
         new Camera();
 
-        stage.widthProperty().addListener(e -> WIDTH = (float) pane.getWidth());
-        stage.heightProperty().addListener(e -> HEIGHT = (float) pane.getHeight());
+        stage.widthProperty().addListener(e -> WIDTH = (float) workingpane.getWidth());
+        stage.heightProperty().addListener(e -> HEIGHT = (float) workingpane.getHeight());
 
         pane.setOnScroll((ScrollEvent event) -> {
             double deltaY = event.getDeltaY();
